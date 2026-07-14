@@ -4,10 +4,21 @@ __pycache__/
 *.pyo
 .venv/
 
-# Results (generated)
+# 环境变量（含API密钥，不上传）
+.env
+
+# 知识文档（原始数据，不上传）
+knowledge_docs/
+
+# 实验结果（运行时生成）
 results_*.json
 screenshot_*.png
 
-# OS
+# 临时文件
+*.tmp
 .DS_Store
 Thumbs.db
+
+# 作业相关（不属于最小RAG）
+TODO.md
+信管*.pdf
