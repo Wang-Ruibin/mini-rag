@@ -73,9 +73,9 @@ LLM 生成回答 ← 重排序（关键词覆盖率） ← TopK 选择
 
 ```env
 # LLM 配置（OpenAI 兼容接口，如 Ollama、MiMo）
-OPENAI_BASE_URL=http://localhost:11434/v1
+OPENAI_BASE_URL=https://api.mimo.xiaomi.com/v1
 OPENAI_API_KEY=your-api-key
-LLM_MODEL=qwen2.5:7b
+LLM_MODEL=mimo-v2.5-pro
 
 # Embedding 模型
 EMBEDDING_MODEL=paraphrase-multilingual-MiniLM-L12-v2
@@ -88,9 +88,14 @@ SIMILARITY_THRESHOLD=0.3
 CHUNK_SIZE=500
 CHUNK_OVERLAP=50
 
-# 性能配置
+# LLM 参数
 LLM_TIMEOUT=30
 LLM_MAX_RETRIES=3
+LLM_MAX_TOKENS=1024
+LLM_TEMPERATURE=0.3
+
+# 上下文与缓存
+MAX_CONTEXT_TOKENS=3000
 CACHE_ENABLED=true
 ```
 

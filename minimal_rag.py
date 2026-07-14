@@ -922,22 +922,41 @@ def main():
         print("=" * 60)
 
         top_k = args.top_k if args.top_k is not None else CFG.default_top_k
-        answer = engine.query(query, top_k=top_k, stream=args.stream)
 
-        # 输出检索结果
-        search_time = answer.retrieval_result.search_time if answer.retrieval_result else 0
-        print(f"\n检索结果 ({len(answer.sources)} 条, 耗时 {search_time:.4f}s):")
-        for i, src in enumerate(answer.sources, 1):
-            print(f"  [{i}] 相似度: {src['score']} | 来源: {src['source']}")
+        if args.no_llm:
+            # 仅检索，不调用 LLM
+            retrieval = engine.retrieve(query, top_k=top_k)
+            search_time = retrieval.search_time if retrieval else 0
+            print(f"\n检索结果 ({len(retrieval.chunks)} 条, 耗时 {search_time:.4f}s):")
+            for i, chunk in enumerate(retrieval.chunks, 1):
+                print(f"  [{i}] 相似度: {chunk.score:.4f} | 来源: {chunk.source}")
+                print(f"      预览: {chunk.content[:100].replace(chr(10), ' ')}")
+            if args.output:
+                result_data = {
+                    "query": query,
+                    "chunks": [{"source": c.source, "score": round(c.score, 4), "preview": c.content[:100]} for c in retrieval.chunks],
+                    "search_time": search_time,
+                }
+                with open(args.output, "w", encoding="utf-8") as f:
+                    json.dump(result_data, f, ensure_ascii=False, indent=2)
+                print(f"\n结果已保存到: {args.output}")
+        else:
+            answer = engine.query(query, top_k=top_k, stream=args.stream)
 
-        # 输出回答
-        if not args.stream:
-            print(f"\n{'='*60}")
-            print("生成回答")
-            print(f"{'='*60}")
-            print(answer.text)
+            # 输出检索结果
+            search_time = answer.retrieval_result.search_time if answer.retrieval_result else 0
+            print(f"\n检索结果 ({len(answer.sources)} 条, 耗时 {search_time:.4f}s):")
+            for i, src in enumerate(answer.sources, 1):
+                print(f"  [{i}] 相似度: {src['score']} | 来源: {src['source']}")
 
-        print(f"\n置信度: {answer.confidence}")
+            # 输出回答
+            if not args.stream:
+                print(f"\n{'='*60}")
+                print("生成回答")
+                print(f"{'='*60}")
+                print(answer.text)
+
+            print(f"\n置信度: {answer.confidence}")
 
         if args.output:
             result_data = {
