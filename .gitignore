@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+
+# Results (generated)
+results_*.json
+screenshot_*.png
+
+# OS
+.DS_Store
+Thumbs.db
