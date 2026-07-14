@@ -2,169 +2,19 @@
 
 # 🧠 Mini RAG
 
-**A minimal, production-ready Retrieval-Augmented Generation system in a single Python file.**
-
 **一个最小的、生产级的 RAG 检索增强生成系统，全部代码在一个 Python 文件中。**
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)](https://python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![FAISS](https://img.shields.io/badge/FAISS-Vector_Search-orange)](https://github.com/facebookresearch/faiss)
 
-*Document Loading → Smart Chunking → Hybrid Retrieval → LLM Generation*
-
-[English](#-features) • [中文](#-特性)
+*文档加载 → 智能切分 → 混合检索 → LLM 生成*
 
 </div>
 
 ---
 
-## ✨ Features
-
-| Feature | Description |
-|---------|-------------|
-| 🔀 **Hybrid Retrieval** | Dense vectors (FAISS) + sparse keywords (BM25) with weighted fusion |
-| 🔍 **Query Rewrite** | Automatic synonym expansion & keyword extraction for better recall |
-| 📊 **Smart Reranking** | Keyword-coverage bonus on top of similarity scores |
-| ✂️ **Intelligent Chunking** | Paragraph-first splitting with sentence boundary detection & overlap |
-| ⚡ **LRU Cache** | Thread-safe cache with TTL expiry for repeated queries |
-| 🔄 **Retry & Fallback** | Exponential backoff retries + graceful degradation when LLM is down |
-| 🌊 **Streaming Output** | Real-time token-by-token streaming via `--stream` flag |
-| ⚙️ **Env-based Config** | All parameters via `.env` — zero hardcoded values |
-
-## 🚀 Quick Start
-
-```bash
-# 1. Clone
-git clone https://github.com/Wang-Ruibin/mini-rag.git
-cd mini-rag
-
-# 2. Install dependencies
-pip install faiss-cpu sentence-transformers openai
-
-# 3. Configure
-cp .env.example .env
-# Edit .env to set your LLM endpoint (Ollama / OpenAI-compatible)
-
-# 4. Add knowledge docs
-mkdir -p knowledge_docs
-# Place your .md files in knowledge_docs/
-
-# 5. Run
-python minimal_rag.py --query "your question"
-```
-
-## 🏗️ Architecture
-
-```
-┌─────────────┐    ┌──────────────┐    ┌─────────────────┐
-│  Document    │───▶│  Smart Text   │───▶│  Vector Index   │
-│  Loading     │    │  Chunking     │    │  (FAISS + BM25) │
-└─────────────┘    └──────────────┘    └────────┬────────┘
-                                                │
-                   ┌──────────────┐    ┌────────▼────────┐
-                   │  Query       │───▶│  Hybrid Search  │
-                   │  Rewrite     │    │  (α-weighted)   │
-                   └──────────────┘    └────────┬────────┘
-                                                │
-                   ┌──────────────┐    ┌────────▼────────┐
-                   │  LLM         │◀───│  Reranking +    │
-                   │  Generation   │    │  TopK Selection │
-                   └──────────────┘    └─────────────────┘
-```
-
-## ⚙️ Configuration
-
-All parameters are configurable via `.env`:
-
-```env
-# LLM (OpenAI-compatible endpoint, e.g. Ollama)
-OPENAI_BASE_URL=http://localhost:11434/v1
-OPENAI_API_KEY=sk-placeholder
-LLM_MODEL=qwen2.5:7b
-
-# Embedding
-EMBEDDING_MODEL=paraphrase-multilingual-MiniLM-L12-v2
-
-# Retrieval
-DEFAULT_TOP_K=5
-SIMILARITY_THRESHOLD=0.3
-
-# Chunking
-CHUNK_SIZE=500
-CHUNK_OVERLAP=50
-
-# Performance
-LLM_TIMEOUT=30
-LLM_MAX_RETRIES=3
-CACHE_ENABLED=true
-```
-
-## 📖 Usage
-
-```bash
-# Single query
-python minimal_rag.py --query "your question"
-
-# Interactive mode
-python minimal_rag.py
-
-# Parameter comparison experiment
-python minimal_rag.py --query "your question" --compare
-
-# Streaming output
-python minimal_rag.py --query "your question" --stream
-
-# Retrieval only (no LLM)
-python minimal_rag.py --query "your question" --no-llm
-
-# Custom top_k
-python minimal_rag.py --query "your question" --top_k 10
-
-# Save results to JSON
-python minimal_rag.py --query "your question" --output results.json
-```
-
-## 🛠️ Tech Stack
-
-- **Embeddings**: [sentence-transformers](https://github.com/UKPLab/sentence-transformers) (`paraphrase-multilingual-MiniLM-L12-v2`)
-- **Vector DB**: [FAISS](https://github.com/facebookresearch/faiss) (`IndexFlatIP`)
-- **Sparse Retrieval**: Custom BM25 implementation
-- **LLM**: Any OpenAI-compatible API ([Ollama](https://ollama.com), [vLLM](https://github.com/vllm-project/vllm), etc.)
-- **Python**: 3.10+
-
-## 📁 Project Structure
-
-```
-mini-rag/
-├── minimal_rag.py      # Complete RAG system (~900 lines)
-├── .env.example        # Configuration template
-├── .gitignore          # Git ignore rules
-├── LICENSE             # MIT License
-├── README.md           # This file
-└── knowledge_docs/     # Knowledge base (.md files)
-```
-
-## 📄 License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-
----
-
-<div align="center">
-
-**If you find this useful, please give it a ⭐ — it means a lot!**
-
-*Made with ❤️ and way too much coffee ☕*
-
-</div>
-
----
-
-<a id="-特性"></a>
-
-## 🇨🇳 中文说明
-
-### 特性
+## ✨ 特性
 
 | 功能 | 说明 |
 |------|------|
@@ -177,7 +27,7 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 | 🌊 **流式输出** | `--stream` 实时逐 token 输出 |
 | ⚙️ **环境变量配置** | 所有参数通过 `.env` 配置，零硬编码 |
 
-### 快速开始
+## 🚀 快速开始
 
 ```bash
 # 1. 克隆仓库
@@ -199,7 +49,7 @@ mkdir -p knowledge_docs
 python minimal_rag.py --query "你的问题"
 ```
 
-### 系统架构
+## 🏗️ 系统架构
 
 ```
 知识文档加载 → 智能文本切分（段落优先+重叠） → FAISS + BM25 索引构建
@@ -209,7 +59,42 @@ python minimal_rag.py --query "你的问题"
 LLM 生成回答 ← 重排序（关键词覆盖率） ← TopK 选择
 ```
 
-### 使用方式
+### 流程详解
+
+1. **文档加载** — 递归扫描 `knowledge_docs/` 下所有 `.md` 文件
+2. **智能切分** — 段落优先 → 句子边界 → 可配置重叠
+3. **索引构建** — FAISS `IndexFlatIP`（余弦相似度）+ BM25 稀疏索引
+4. **检索阶段** — 查询改写 → 混合检索（向量+BM25 加权融合）→ 重排序 → 去重
+5. **生成阶段** — System Prompt + 上下文 → LLM（带重试与降级）
+
+## ⚙️ 配置说明
+
+所有参数通过 `.env` 文件配置：
+
+```env
+# LLM 配置（OpenAI 兼容接口，如 Ollama、MiMo）
+OPENAI_BASE_URL=http://localhost:11434/v1
+OPENAI_API_KEY=your-api-key
+LLM_MODEL=qwen2.5:7b
+
+# Embedding 模型
+EMBEDDING_MODEL=paraphrase-multilingual-MiniLM-L12-v2
+
+# 检索参数
+DEFAULT_TOP_K=5
+SIMILARITY_THRESHOLD=0.3
+
+# 切分参数
+CHUNK_SIZE=500
+CHUNK_OVERLAP=50
+
+# 性能配置
+LLM_TIMEOUT=30
+LLM_MAX_RETRIES=3
+CACHE_ENABLED=true
+```
+
+## 📖 使用方式
 
 ```bash
 # 单次查询
@@ -234,7 +119,7 @@ python minimal_rag.py --query "问题" --top_k 10
 python minimal_rag.py --query "问题" --output results.json
 ```
 
-### 技术栈
+## 🛠️ 技术栈
 
 | 组件 | 选型 |
 |------|------|
@@ -243,8 +128,43 @@ python minimal_rag.py --query "问题" --output results.json
 | 稀疏检索 | 自实现 BM25（k1=1.5, b=0.75） |
 | 混合策略 | α 加权融合（α=0.7 向量 + 0.3 BM25） |
 | LLM | 任意 OpenAI 兼容 API（Ollama、MiMo、vLLM 等） |
+| Python | 3.10+ |
 
-### 许可证
+## 📁 项目结构
+
+```
+mini-rag/
+├── minimal_rag.py      # 完整 RAG 系统（约 900 行）
+├── .env.example        # 配置模板
+├── .gitignore          # Git 忽略规则
+├── LICENSE             # MIT 许可证
+├── README.md           # 本文件
+└── knowledge_docs/     # 知识库（.md 文件）
+```
+
+## 📊 参数对比实验
+
+运行 `--compare` 可自动测试不同参数组合的效果：
+
+| chunk_size | overlap | top_k | chunks 数量 | 最佳相似度 |
+|-----------|---------|-------|------------|-----------|
+| 200 | 50 | 3 | 4056 | 0.7992 |
+| 500 | 50 | 3 | 1661 | 0.7700 |
+| 1000 | 50 | 3 | 878 | 0.7640 |
+| 500 | 0 | 3 | 1661 | 0.7783 |
+| 500 | 100 | 3 | 1661 | 0.7700 |
+
+## 🤝 参与贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+1. Fork 本仓库
+2. 创建特性分支 (`git checkout -b feature/amazing-feature`)
+3. 提交更改 (`git commit -m 'Add amazing feature'`)
+4. 推送分支 (`git push origin feature/amazing-feature`)
+5. 提交 Pull Request
+
+## 📄 许可证
 
 本项目基于 MIT 许可证开源，详见 [LICENSE](LICENSE)。
 
@@ -253,5 +173,7 @@ python minimal_rag.py --query "问题" --output results.json
 <div align="center">
 
 **如果觉得有用，点个 ⭐ 吧！**
+
+*用 ❤️ 和太多咖啡 ☕ 制作*
 
 </div>
