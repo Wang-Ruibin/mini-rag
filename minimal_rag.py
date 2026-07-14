@@ -958,17 +958,17 @@ def main():
 
             print(f"\n置信度: {answer.confidence}")
 
-        if args.output:
-            result_data = {
-                "query": query,
-                "answer": answer.text,
-                "confidence": answer.confidence,
-                "sources": answer.sources,
-                "search_time": answer.retrieval_result.search_time,
-            }
-            with open(args.output, "w", encoding="utf-8") as f:
-                json.dump(result_data, f, ensure_ascii=False, indent=2)
-            print(f"结果已保存到: {args.output}")
+            if args.output:
+                result_data = {
+                    "query": query,
+                    "answer": answer.text,
+                    "confidence": answer.confidence,
+                    "sources": answer.sources,
+                    "search_time": answer.retrieval_result.search_time,
+                }
+                with open(args.output, "w", encoding="utf-8") as f:
+                    json.dump(result_data, f, ensure_ascii=False, indent=2)
+                print(f"结果已保存到: {args.output}")
 
 
 if __name__ == "__main__":
